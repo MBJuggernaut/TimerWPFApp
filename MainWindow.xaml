@@ -8,24 +8,8 @@
         xmlns:views="clr-namespace:TimerWpfApp.Views"        
         Title="MainWindow" Height="450" Width="560">
 
-    <DockPanel>
-        <!--<StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
-            <Button Command="{Binding NewTabCommand}" Margin="0,0,12,0">New Tab</Button>
-        </StackPanel>-->
-        <TabControl ItemsSource="{Binding Tabs}">
-        <TabControl.Resources>
-            <DataTemplate DataType="{x:Type models:DateTab}">
-                <views:DateTabView/>
-            </DataTemplate>
-        </TabControl.Resources>
-        <TabControl.ItemTemplate>
-            <DataTemplate DataType="{x:Type models:ITab}">
-                <TextBlock>
-                    <Run Text="{Binding Name}"/>
-                    <Hyperlink Command="{Binding CloseCommand}">X</Hyperlink>
-                </TextBlock>
-            </DataTemplate>
-        </TabControl.ItemTemplate>
-    </TabControl>
-    </DockPanel>
+    <Grid>
+        <views:TabView/>
+    </Grid>
+
 </Window>

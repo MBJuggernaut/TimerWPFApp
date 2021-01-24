@@ -1,40 +1,58 @@
-﻿using System.Collections.Generic;
+﻿using GalaSoft.MvvmLight.Command;
+using System;
 using System.Collections.ObjectModel;
+using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Windows.Controls;
+using System.Windows.Input;
 using TimerWpfApp.Models;
 
 namespace TimerWpfApp.ViewModels
 {
-    public class TabViewModel : INotifyPropertyChanged
+    public class TabViewModel
     {
+        public ICommand AddTabCommand { get; }
+        public int SelectedIndex { get; set; }
+        public ObservableCollection<ITab> Tabs { get; }
+        private readonly ObservableCollection<ITab> tabs;
 
-        private ICollection<ITab> tabs;
-
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public ICollection<ITab> Tabs
-        {
-            get
-            {
-                return tabs;
-            }
-            set
-            {
-
-            }
-        }
+        public TabControl tabControl;
 
         public TabViewModel()
         {
-            tabs = new ObservableCollection<ITab>
-            {
-                new DateTab()
-            };
+
+            AddTabCommand = new RelayCommand(() => AddTab(), true);
+            tabs = new ObservableCollection<ITab>();
+            tabs.CollectionChanged += Tabs_CollectionChanged;
+            Tabs = tabs;
+            Tabs.Add(new DateTab());
         }
 
-        private void OnPropertyChanged(string propertyName)
+        private void AddTab()
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            Tabs.Add(new DateTab());
+        }
+
+        private void Tabs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+        {
+            ITab tab;
+            switch (e.Action)
+            {
+                case NotifyCollectionChangedAction.Add:
+                    tab = (ITab)e.NewItems[0];
+                    tab.CloseRequested += OnTabCloseRequested;
+                    SelectedIndex = tabs.Count-1;
+                    break;
+
+                case NotifyCollectionChangedAction.Remove:
+                    tab = (ITab)e.OldItems[0];
+                    tab.CloseRequested -= OnTabCloseRequested;
+                    break;
+            }
+        }
+        private void OnTabCloseRequested(object sender, EventArgs e)
+        {
+            Tabs.Remove((ITab)sender);
         }
     }
 }

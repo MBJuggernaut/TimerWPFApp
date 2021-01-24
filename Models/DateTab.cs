@@ -10,7 +10,7 @@ namespace TimerWpfApp.Models
     {
         public DateTab()
         {
-            Name = DateTime.Now.ToString("HH:mm");
+            Name = DateTime.Now.ToString("HH:mm:ss");
         }
     }
 }
