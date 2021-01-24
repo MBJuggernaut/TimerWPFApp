@@ -4,10 +4,11 @@
              xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
              xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
              xmlns:views="clr-namespace:TimerWpfApp.Views"
-             mc:Ignorable="d" 
-             d:DesignHeight="450" d:DesignWidth="800">
-    <Grid>
-        <Label Content="Label" HorizontalAlignment="Left" Margin="384,112,0,0" VerticalAlignment="Top"/>
-
+             mc:Ignorable="d" d:DesignWidth="412.8" d:DesignHeight="321.6">
+    <Grid HorizontalAlignment="Center" Width="Auto" Height="Auto" Margin="0,0,0,0">
+        <Button Content="Pause" HorizontalAlignment="Left" Margin="0,196,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Content="Reset" HorizontalAlignment="Left" Margin="248,196,0,0" VerticalAlignment="Top" Width="75"/>
+        <Button Content="Start" Command="{Binding Start}" HorizontalAlignment="Left" Margin="119,196,0,0" VerticalAlignment="Top" Width="75"/>
+        <Label Content="{Binding Time}" HorizontalAlignment="Left" Margin="137,87,0,0" VerticalAlignment="Top"/>
     </Grid>
 </UserControl>

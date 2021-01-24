@@ -16,12 +16,14 @@
             <Grid/>
         </DataTemplate>
         <DataTemplate x:Key="newTabButtonHeaderTemplate">
-            <TextBlock>
+            <DockPanel>
+                <TextBlock>
             <Hyperlink Command="{Binding AddTabCommand}"> + </Hyperlink>
-            </TextBlock>
+                </TextBlock>
+            </DockPanel>
         </DataTemplate>
         <DataTemplate x:Key="itemContentTemplate">
-            <views:DateTabView/>
+            <views:DateTabView DataContext="{Binding DateTabViewModel}"/>
         </DataTemplate>
         <DataTemplate x:Key="itemHeaderTemplate">
             <TextBlock>
@@ -39,29 +41,10 @@
                             ItemTemplate="{StaticResource itemContentTemplate}"/>
     </UserControl.Resources>
     <DockPanel>
-        <TabControl SelectedIndex="{Binding Path=SelectedTabIndex}" ItemsSource="{Binding Tabs}" ItemTemplateSelector="{StaticResource headerTemplateSelector}"
-        ContentTemplateSelector="{StaticResource contentTemplateSelector}"/>
-        <!--<i:Interaction.Triggers>
-                <i:EventTrigger EventName="SelectionChanged">
-                    <i:InvokeCommandAction CommandName="selectionChanged" Command="{Binding AddTabCommand}"
-                CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=CommandName}"/>
-                </i:EventTrigger>
-            </i:Interaction.Triggers>
-            -->
-        <!--<TabControl.Resources>
-                <DataTemplate DataType="{x:Type models:DateTab}">
-                    <views:DateTabView/>
-                </DataTemplate>
-            </TabControl.Resources>
-            <TabControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type models:DateTab}">
-                    <TextBlock>
-                    <Run Text="{Binding Name}"/>
-                    <Hyperlink Command="{Binding CloseCommand}">X</Hyperlink>
-                    </TextBlock>
-                </DataTemplate>
-            </TabControl.ItemTemplate>-->
-        <!--
-        </TabControl>-->
+        <TabControl SelectedIndex="{Binding Path=SelectedTabIndex}" 
+                    ItemsSource="{Binding Tabs}" 
+                    ItemTemplateSelector="{StaticResource headerTemplateSelector}"
+                    ContentTemplateSelector="{StaticResource contentTemplateSelector}"
+                    />
     </DockPanel>
 </UserControl>

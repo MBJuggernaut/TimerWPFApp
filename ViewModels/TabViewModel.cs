@@ -1,55 +1,46 @@
-﻿using GalaSoft.MvvmLight.Command;
-using Microsoft.Xaml.Behaviors.Core;
-using System;
+﻿using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
-using System.Windows.Threading;
+using System.ComponentModel;
 using TimerWpfApp.Models;
 
 namespace TimerWpfApp.ViewModels
 {
-    public class TabViewModel
+    public class TabViewModel : INotifyPropertyChanged
     {
-       // public ICommand AddTabCommand { get; }
-        public int selectedTabIndex = 0;
-       public AddTab addTab { get; }
         public int SelectedTabIndex
         {
-            get
-            {
-                return selectedTabIndex;
-            }
+            get { return selectedTabIndex; }
             set
             {
-                selectedTabIndex = value;
+                if (selectedTabIndex != value)
+                {
+                    selectedTabIndex = value;
+                    OnPrChanged("SelectedTabIndex");
+                }
             }
         }
         public ObservableCollection<ITab> Tabs { get; }
+        private AddTabModel addTabUnit { get; }
+        private int selectedTabIndex = 0;
         private readonly ObservableCollection<ITab> tabs;
-
         public TabViewModel()
         {
-            addTab = new AddTab();
+            addTabUnit = new AddTabModel();
+            addTabUnit.AddRequested += AddTab;
+
             tabs = new ObservableCollection<ITab>();
             tabs.CollectionChanged += Tabs_CollectionChanged;
             Tabs = tabs;
-            addTab.AddRequested += AddTab;
-            Tabs.Add(new DateTab());
-            Tabs.Add(addTab);                      
+
+            Tabs.Add(new TimerTab());
+            Tabs.Add(addTabUnit);
         }
-
-        
-
-        private void AddTab(object sender, EventArgs e)         
+        private void AddTab(object sender, EventArgs e)
         {
-
-            Tabs.Insert(Tabs.Count - 1, new DateTab());
+            Tabs.Insert(Tabs.Count - 1, new TimerTab());
+            selectedTabIndex = Tabs.Count - 2;
         }
-
         private void Tabs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
             ITab tab;
@@ -57,7 +48,7 @@ namespace TimerWpfApp.ViewModels
             {
                 case NotifyCollectionChangedAction.Add:
                     tab = (ITab)e.NewItems[0];
-                    tab.CloseRequested += OnTabCloseRequested;                    
+                    tab.CloseRequested += OnTabCloseRequested;
                     break;
 
                 case NotifyCollectionChangedAction.Remove:
@@ -70,25 +61,10 @@ namespace TimerWpfApp.ViewModels
         {
             Tabs.Remove((ITab)sender);
         }
-    }
-
-    public class TabTemplateSelector: DataTemplateSelector
-    {
-        public DataTemplate ItemTemplate { get; set; }
-        public DataTemplate NewButtonTemplate { get; set; }
-
-        public override DataTemplate SelectTemplate(object item, DependencyObject container)
+        public event PropertyChangedEventHandler PropertyChanged;
+        private void OnPrChanged(string s)
         {
-            Type itemtype = item.GetType();
-            Type ad = typeof(AddTab);
-            if (itemtype.Equals(ad))
-            {
-                return NewButtonTemplate;
-            }
-            else
-            {
-                return ItemTemplate;
-            }
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(s));
         }
     }
 }

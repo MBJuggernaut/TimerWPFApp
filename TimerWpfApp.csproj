@@ -70,8 +70,11 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Compile Include="Models\AddTab.cs" />
-    <Compile Include="Models\DateTab.cs" />
+    <Compile Include="Models\AddTabModel.cs" />
+    <Compile Include="Models\TimerTab.cs" />
+    <Compile Include="Models\TimerSpan.cs" />
+    <Compile Include="ViewModels\DateTabViewModel.cs" />
+    <Compile Include="ViewModels\TabTemplateSelector.cs" />
     <Compile Include="ViewModels\TabViewModel.cs" />
     <Compile Include="Views\DateTabView.xaml.cs">
       <DependentUpon>DateTabView.xaml</DependentUpon>

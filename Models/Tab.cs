@@ -16,9 +16,9 @@ namespace TimerWpfApp.Models
             get { return name; }
             set { name = value;}
         }
-
         public ICommand CloseCommand { get; }
-
         public event EventHandler CloseRequested = delegate { };
+
+
     }
 }

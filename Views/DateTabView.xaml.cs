@@ -1,4 +1,5 @@
 ﻿using System.Windows.Controls;
+using TimerWpfApp.ViewModels;
 
 namespace TimerWpfApp.Views
 {
