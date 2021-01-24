@@ -11,9 +11,6 @@ namespace TimerWpfApp
         public MainWindow()
         {
             InitializeComponent();
-            //TabControl tabControl = new TabControl();
-            //TabItem ti = new TabItem();
-  
         }
 
 

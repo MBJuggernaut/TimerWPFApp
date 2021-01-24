@@ -12,36 +12,56 @@
              d:DesignHeight="450" d:DesignWidth="800">
 
     <UserControl.Resources>
-        <CollectionViewSource Source="{Binding Path=Tabs}" x:Key="cvs" />
+        <DataTemplate x:Key="newTabButtonContentTemplate">
+            <Grid/>
+        </DataTemplate>
+        <DataTemplate x:Key="newTabButtonHeaderTemplate">
+            <TextBlock>
+            <Hyperlink Command="{Binding AddTabCommand}"> + </Hyperlink>
+            </TextBlock>
+        </DataTemplate>
+        <DataTemplate x:Key="itemContentTemplate">
+            <views:DateTabView/>
+        </DataTemplate>
+        <DataTemplate x:Key="itemHeaderTemplate">
+            <TextBlock>
+                    <Run Text="{Binding Name}"/>
+                    <Hyperlink Command="{Binding CloseCommand}">X</Hyperlink>
+            </TextBlock>
+        </DataTemplate>
+
+        <viewmodels:TabTemplateSelector x:Key="headerTemplateSelector"
+                           NewButtonTemplate="{StaticResource newTabButtonHeaderTemplate}"
+                           ItemTemplate="{StaticResource itemHeaderTemplate}"/>
+
+        <viewmodels:TabTemplateSelector x:Key="contentTemplateSelector"
+                            NewButtonTemplate="{StaticResource newTabButtonContentTemplate}"
+                            ItemTemplate="{StaticResource itemContentTemplate}"/>
     </UserControl.Resources>
     <DockPanel>
-        <TabControl SelectedIndex="{Binding SelectedIndex}">
-            <TabControl.Resources>
+        <TabControl SelectedIndex="{Binding Path=SelectedTabIndex}" ItemsSource="{Binding Tabs}" ItemTemplateSelector="{StaticResource headerTemplateSelector}"
+        ContentTemplateSelector="{StaticResource contentTemplateSelector}"/>
+        <!--<i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction CommandName="selectionChanged" Command="{Binding AddTabCommand}"
+                CommandParameter="{Binding RelativeSource={RelativeSource Self}, Path=CommandName}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            -->
+        <!--<TabControl.Resources>
                 <DataTemplate DataType="{x:Type models:DateTab}">
                     <views:DateTabView/>
                 </DataTemplate>
             </TabControl.Resources>
             <TabControl.ItemTemplate>
-                <DataTemplate DataType="{x:Type models:ITab}">
+                <DataTemplate DataType="{x:Type models:DateTab}">
                     <TextBlock>
                     <Run Text="{Binding Name}"/>
                     <Hyperlink Command="{Binding CloseCommand}">X</Hyperlink>
                     </TextBlock>
                 </DataTemplate>
-            </TabControl.ItemTemplate>
-            <TabControl.ItemsSource>
-                <CompositeCollection>
-                    <CollectionContainer Collection="{Binding Source={StaticResource ResourceKey=cvs}}">
-                    </CollectionContainer>
-                    <TabItem Header=" + ">
-                        <i:Interaction.Triggers>
-                            <i:EventTrigger EventName="MouseLeftButtonUp">
-                                <i:InvokeCommandAction Command="{Binding AddTabCommand}"/>
-                            </i:EventTrigger>
-                        </i:Interaction.Triggers>
-                    </TabItem>
-                </CompositeCollection>
-            </TabControl.ItemsSource>
-        </TabControl>
+            </TabControl.ItemTemplate>-->
+        <!--
+        </TabControl>-->
     </DockPanel>
 </UserControl>
