@@ -3,14 +3,14 @@ using System.Timers;
 
 namespace TimerWpfApp.Models
 {
-    public class TimerSpan
+    public class TimerSpanModel
     {
         private readonly Timer timer;
         public TimeSpan Timespan;
-        private int passedtime = 0;
+        public int passedtime = 0;
         public event EventHandler TimerClicked = delegate { };
 
-        public TimerSpan()
+        public TimerSpanModel()
         {
             timer = new Timer(1000);
             timer.Elapsed += Timer_Elapsed;

@@ -20,26 +20,37 @@ namespace TimerWpfApp.ViewModels
                 }
             }
         }
+        private bool TabsCanBeAdded = true;
+        private bool TabsCanBeDeleted = true;
         public ObservableCollection<ITab> Tabs { get; }
-        private AddTabModel addTabUnit { get; }
+        private AddTabModel AddTabUnit { get; }
         private int selectedTabIndex = 0;
         private readonly ObservableCollection<ITab> tabs;
         public TabViewModel()
         {
-            addTabUnit = new AddTabModel();
-            addTabUnit.AddRequested += AddTab;
+            AddTabUnit = new AddTabModel();
+            AddTabUnit.AddRequested += AddTab;
 
             tabs = new ObservableCollection<ITab>();
             tabs.CollectionChanged += Tabs_CollectionChanged;
             Tabs = tabs;
 
-            Tabs.Add(new TimerTab());
-            Tabs.Add(addTabUnit);
+            Tabs.Add(new TimerTabModel());
+            Tabs.Add(AddTabUnit);
         }
         private void AddTab(object sender, EventArgs e)
         {
-            Tabs.Insert(Tabs.Count - 1, new TimerTab());
-            selectedTabIndex = Tabs.Count - 2;
+            if (TabsCanBeAdded)
+            {
+                Tabs.Insert(Tabs.Count - 1, new TimerTabModel());
+                selectedTabIndex = Tabs.Count - 2;
+
+                if (Tabs.Count > 10)
+                {
+                    TabsCanBeAdded = false;
+                    Tabs.RemoveAt(Tabs.Count - 1);
+                }
+            }
         }
         private void Tabs_CollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
         {
@@ -59,8 +70,19 @@ namespace TimerWpfApp.ViewModels
         }
         private void OnTabCloseRequested(object sender, EventArgs e)
         {
-            Tabs.Remove((ITab)sender);
+            if (TabsCanBeDeleted)
+            {
+                Tabs.Remove((ITab)sender);
+                if (!TabsCanBeAdded)
+                {
+                    Tabs.Add(AddTabUnit);
+                    TabsCanBeAdded = true;
+                }
+
+            }
         }
+
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPrChanged(string s)
         {
