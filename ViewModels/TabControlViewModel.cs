@@ -21,8 +21,22 @@ namespace TimerWpfApp.ViewModels
                 }
             }
         }
-        private bool TabsCanBeAdded = true;
-        private bool TabsCanBeDeleted = true;
+        private bool TabsCanBeAdded
+        {
+            get
+            {
+                if (Tabs.Count < 11) return true;
+                else return false;
+            }
+        }
+        private bool TabsCanBeDeleted
+        {
+            get
+            {
+                if (Tabs.Count >=2) return true;
+                else return false;
+            }
+        }
         public ObservableCollection<ITab> Tabs { get; }
         private AddTabModel AddTabUnit { get; }
         private int selectedTabIndex = 0;
@@ -47,8 +61,7 @@ namespace TimerWpfApp.ViewModels
                 selectedTabIndex = Tabs.Count - 2;
 
                 if (Tabs.Count > 10)
-                {
-                    TabsCanBeAdded = false;
+                {                  
                     Tabs.RemoveAt(Tabs.Count - 1);
                 }
             }
@@ -74,16 +87,12 @@ namespace TimerWpfApp.ViewModels
             if (TabsCanBeDeleted)
             {
                 Tabs.Remove((ITab)sender);
-                if (!TabsCanBeAdded)
+                if (TabsCanBeAdded&&!Tabs.Contains(AddTabUnit))
                 {
-                    Tabs.Add(AddTabUnit);
-                    TabsCanBeAdded = true;
+                    Tabs.Add(AddTabUnit);                   
                 }
-
             }
         }
-
-
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName]string propertyName = "")
         {
