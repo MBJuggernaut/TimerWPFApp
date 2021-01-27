@@ -44,7 +44,7 @@ namespace TimerWpfApp.ViewModels
         public TabControlViewModel()
         {
             AddTabUnit = new AddTabModel();
-            AddTabUnit.AddRequested += AddTab;
+            AddTabUnit.AddRequested += OnTabAddRequested;
 
             tabs = new ObservableCollection<ITab>();
             tabs.CollectionChanged += Tabs_CollectionChanged;
@@ -53,14 +53,14 @@ namespace TimerWpfApp.ViewModels
             Tabs.Add(new TimerTabModel());
             Tabs.Add(AddTabUnit);
         }
-        private void AddTab(object sender, EventArgs e)
+        private void OnTabAddRequested(object sender, EventArgs e)
         {
             if (TabsCanBeAdded)
             {
                 Tabs.Insert(Tabs.Count - 1, new TimerTabModel());
                 selectedTabIndex = Tabs.Count - 2;
 
-                if (Tabs.Count > 10)
+                if (!TabsCanBeAdded)
                 {                  
                     Tabs.RemoveAt(Tabs.Count - 1);
                 }
@@ -87,12 +87,13 @@ namespace TimerWpfApp.ViewModels
             if (TabsCanBeDeleted)
             {
                 Tabs.Remove((ITab)sender);
-                if (TabsCanBeAdded&&!Tabs.Contains(AddTabUnit))
+                if (!Tabs.Contains(AddTabUnit)&&TabsCanBeAdded)
                 {
                     Tabs.Add(AddTabUnit);                   
                 }
             }
         }
+
         public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName]string propertyName = "")
         {
