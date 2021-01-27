@@ -25,7 +25,7 @@ namespace TimerWpfApp.Views
         {
             InitializeComponent();
 
-            TabViewModel tvm = new TabViewModel();
+            TabControlViewModel tvm = new TabControlViewModel();
             DataContext = tvm;
         }
     }

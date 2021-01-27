@@ -2,11 +2,12 @@
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using TimerWpfApp.Models;
 
 namespace TimerWpfApp.ViewModels
 {
-    public class TabViewModel : INotifyPropertyChanged
+    public class TabControlViewModel : INotifyPropertyChanged
     {
         public int SelectedTabIndex
         {
@@ -16,7 +17,7 @@ namespace TimerWpfApp.ViewModels
                 if (selectedTabIndex != value)
                 {
                     selectedTabIndex = value;
-                    OnPrChanged("SelectedTabIndex");
+                    OnPropertyChanged("SelectedTabIndex");
                 }
             }
         }
@@ -26,7 +27,7 @@ namespace TimerWpfApp.ViewModels
         private AddTabModel AddTabUnit { get; }
         private int selectedTabIndex = 0;
         private readonly ObservableCollection<ITab> tabs;
-        public TabViewModel()
+        public TabControlViewModel()
         {
             AddTabUnit = new AddTabModel();
             AddTabUnit.AddRequested += AddTab;
@@ -84,9 +85,9 @@ namespace TimerWpfApp.ViewModels
 
 
         public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPrChanged(string s)
+        private void OnPropertyChanged([CallerMemberName]string propertyName = "")
         {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(s));
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

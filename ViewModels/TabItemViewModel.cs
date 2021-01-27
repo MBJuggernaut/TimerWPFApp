@@ -1,12 +1,13 @@
 ﻿using Microsoft.Xaml.Behaviors.Core;
 using System;
 using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 using TimerWpfApp.Models;
 
 namespace TimerWpfApp.ViewModels
 {
-    public class TimerTabViewModel: INotifyPropertyChanged
+    public class TabItemViewModel: INotifyPropertyChanged
     {
         private bool IsVisible = true;
         public bool IsVisibleStart
@@ -41,7 +42,7 @@ namespace TimerWpfApp.ViewModels
             set
             {
                 isPauseButtonPressed = value;
-                OnPropertyChanged("IsPauseButtonPressed");
+                OnPropertyChanged();
             }
         }
 
@@ -52,7 +53,7 @@ namespace TimerWpfApp.ViewModels
             set
             {
                 pauseButtonHeader = value;
-                OnPropertyChanged("PauseButtonHeader");
+                OnPropertyChanged();
             }
         }
 
@@ -63,7 +64,7 @@ namespace TimerWpfApp.ViewModels
             set
             {
                 time = value;
-                OnPropertyChanged("Time");
+                OnPropertyChanged();
             }
         }
 
@@ -83,7 +84,7 @@ namespace TimerWpfApp.ViewModels
 
         private readonly TimerSpanModel timer;
 
-        public TimerTabViewModel()
+        public TabItemViewModel()
         {
             timer = new TimerSpanModel();
 
@@ -122,8 +123,9 @@ namespace TimerWpfApp.ViewModels
             IsVisibleStart = true;
             IsVisiblePauseAndReset = false;
         }
+
         public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged(string propertyName)
+        private void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

@@ -74,9 +74,9 @@
     <Compile Include="Models\AddTabModel.cs" />
     <Compile Include="Models\TimerTabModel.cs" />
     <Compile Include="Models\TimerSpanModel.cs" />
-    <Compile Include="ViewModels\TimerTabViewModel.cs" />
+    <Compile Include="ViewModels\TabItemViewModel.cs" />
     <Compile Include="ViewModels\TabTemplateSelector.cs" />
-    <Compile Include="ViewModels\TabViewModel.cs" />
+    <Compile Include="ViewModels\TabControlViewModel.cs" />
     <Compile Include="Views\TabItemView.xaml.cs">
       <DependentUpon>TabItemView.xaml</DependentUpon>
     </Compile>
