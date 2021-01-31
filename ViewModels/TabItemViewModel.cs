@@ -102,8 +102,8 @@ namespace TimerWpfApp.ViewModels
             timer.Start();
             PauseButtonHeader = "Pause";
             Pause = new ActionCommand(() => PauseTimer());
-            IsVisibleStart = true;
-            IsVisiblePauseAndReset = false;
+            IsVisibleStart = false;
+            IsVisiblePauseAndReset = true;
             IsPauseButtonPressed = false;
         }
         private void PauseTimer()

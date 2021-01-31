@@ -1,19 +1,20 @@
-﻿using Prism.Ioc;
-using Prism.Unity;
+﻿using Microsoft.Practices.Prism.UnityExtensions;
+using Microsoft.Practices.Unity;
+using Prism.Ioc;
 using System.Windows;
 
 namespace TimerWpfApp
 {
-    class Bootstrapper : PrismBootstrapper
+    class Bootstrapper : UnityBootstrapper
     {
         protected override DependencyObject CreateShell()
         {
-            return Container.Resolve<MainWindow>();            
+            return Container.Resolve<MainWindow>();
         }
 
-        protected override void RegisterTypes(IContainerRegistry containerRegistry)
+        protected override void InitializeShell()
         {
-            
+            Application.Current.MainWindow.Show();
         }
     }
 
