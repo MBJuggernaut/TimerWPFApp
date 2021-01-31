@@ -7,18 +7,24 @@ using TimerWpfApp.Models;
 
 namespace TimerWpfApp.ViewModels
 {
-    public class TabItemViewModel: INotifyPropertyChanged
+    public class TabItemViewModel : INotifyPropertyChanged
     {
-        private bool IsVisible = true;
+        private bool isStartTimer = false;
+        private string pauseButtonHeader;
+        private bool isPauseButtonPressed;
+        private TimeSpan time;
+        private ICommand pause;
+        private readonly TimerSpanModel timer;
+
         public bool IsVisibleStart
         {
             get
             {
-                return IsVisible;
+                return !isStartTimer;
             }
             set
             {
-                IsVisible = value;
+                isStartTimer = !value;
                 OnPropertyChanged("IsVisibleStart");
             }
         }
@@ -26,16 +32,15 @@ namespace TimerWpfApp.ViewModels
         {
             get
             {
-                return !IsVisible;
+                return isStartTimer;
             }
             set
             {
-                IsVisible = !value;
+                isStartTimer = value;
                 OnPropertyChanged("IsVisiblePauseAndReset");
             }
         }
 
-        private bool isPauseButtonPressed;
         public bool IsPauseButtonPressed
         {
             get => isPauseButtonPressed;
@@ -44,9 +49,7 @@ namespace TimerWpfApp.ViewModels
                 isPauseButtonPressed = value;
                 OnPropertyChanged();
             }
-        }
-
-        private string pauseButtonHeader;
+        } // перенести в события?
         public string PauseButtonHeader
         {
             get => pauseButtonHeader;
@@ -56,8 +59,6 @@ namespace TimerWpfApp.ViewModels
                 OnPropertyChanged();
             }
         }
-
-        private TimeSpan time;
         public TimeSpan Time
         {
             get => time;
@@ -69,9 +70,7 @@ namespace TimerWpfApp.ViewModels
         }
 
         public ICommand Start { get; }
-        public ICommand Reset { get; }
-
-        private ICommand pause;
+        public ICommand Reset { get; }        
         public ICommand Pause
         {
             get => pause;
@@ -81,8 +80,7 @@ namespace TimerWpfApp.ViewModels
                 OnPropertyChanged("Pause");
             }
         }
-
-        private readonly TimerSpanModel timer;
+        public event PropertyChangedEventHandler PropertyChanged;
 
         public TabItemViewModel()
         {
@@ -104,8 +102,8 @@ namespace TimerWpfApp.ViewModels
             timer.Start();
             PauseButtonHeader = "Pause";
             Pause = new ActionCommand(() => PauseTimer());
-            IsVisibleStart = false;
-            IsVisiblePauseAndReset = true;
+            IsVisibleStart = true;
+            IsVisiblePauseAndReset = false;
             IsPauseButtonPressed = false;
         }
         private void PauseTimer()
@@ -124,7 +122,6 @@ namespace TimerWpfApp.ViewModels
             IsVisiblePauseAndReset = false;
         }
 
-        public event PropertyChangedEventHandler PropertyChanged;
         private void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));

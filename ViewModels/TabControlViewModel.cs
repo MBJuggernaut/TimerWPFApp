@@ -7,8 +7,13 @@ using TimerWpfApp.Models;
 
 namespace TimerWpfApp.ViewModels
 {
+
     public class TabControlViewModel : INotifyPropertyChanged
     {
+        private int selectedTabIndex = 0;
+        private readonly ObservableCollection<ITab> tabs;
+        private readonly AddTabModel addTabUnit;
+
         public int SelectedTabIndex
         {
             get { return selectedTabIndex; }
@@ -33,25 +38,25 @@ namespace TimerWpfApp.ViewModels
         {
             get
             {
-                if (Tabs.Count >=2) return true;
+                if (Tabs.Count >= 2) return true;
                 else return false;
             }
         }
         public ObservableCollection<ITab> Tabs { get; }
-        private AddTabModel AddTabUnit { get; }
-        private int selectedTabIndex = 0;
-        private readonly ObservableCollection<ITab> tabs;
+
+        public event PropertyChangedEventHandler PropertyChanged;
+
         public TabControlViewModel()
         {
-            AddTabUnit = new AddTabModel();
-            AddTabUnit.AddRequested += OnTabAddRequested;
+            addTabUnit = new AddTabModel();
+            addTabUnit.AddRequested += OnTabAddRequested;
 
             tabs = new ObservableCollection<ITab>();
             tabs.CollectionChanged += Tabs_CollectionChanged;
             Tabs = tabs;
 
             Tabs.Add(new TimerTabModel());
-            Tabs.Add(AddTabUnit);
+            Tabs.Add(addTabUnit);
         }
         private void OnTabAddRequested(object sender, EventArgs e)
         {
@@ -61,7 +66,7 @@ namespace TimerWpfApp.ViewModels
                 selectedTabIndex = Tabs.Count - 2;
 
                 if (!TabsCanBeAdded)
-                {                  
+                {
                     Tabs.RemoveAt(Tabs.Count - 1);
                 }
             }
@@ -87,15 +92,13 @@ namespace TimerWpfApp.ViewModels
             if (TabsCanBeDeleted)
             {
                 Tabs.Remove((ITab)sender);
-                if (!Tabs.Contains(AddTabUnit)&&TabsCanBeAdded)
+                if (!Tabs.Contains(addTabUnit) && TabsCanBeAdded)
                 {
-                    Tabs.Add(AddTabUnit);                   
+                    Tabs.Add(addTabUnit);
                 }
             }
-        }
-
-        public event PropertyChangedEventHandler PropertyChanged;
-        private void OnPropertyChanged([CallerMemberName]string propertyName = "")
+        }        
+        private void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
