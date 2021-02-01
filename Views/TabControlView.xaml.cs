@@ -19,9 +19,9 @@ namespace TimerWpfApp.Views
     /// <summary>
     /// Interaction logic for TabView.xaml
     /// </summary>
-    public partial class TabView : UserControl
+    public partial class TabControlView : UserControl
     {
-        public TabView()
+        public TabControlView()
         {
             InitializeComponent();
 

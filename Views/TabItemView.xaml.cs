@@ -6,9 +6,9 @@ namespace TimerWpfApp.Views
     /// <summary>
     /// Interaction logic for DateTabView.xaml
     /// </summary>
-    public partial class DateTabView : UserControl
+    public partial class TabItemView : UserControl
     {
-        public DateTabView()
+        public TabItemView()
         {
             InitializeComponent();
         }
