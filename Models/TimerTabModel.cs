@@ -5,11 +5,11 @@ namespace TimerWpfApp.Models
 {
     public class TimerTabModel : Tab
     {
-        public TabItemViewModel DateTabViewModel { get; }
+        public TabItemViewModel TabItemViewModel { get; }
         public TimerTabModel()
         {
             Name = DateTime.Now.ToString("HH:mm:ss");
-            DateTabViewModel = new TabItemViewModel();
+            TabItemViewModel = new TabItemViewModel();
         }
     }
 }

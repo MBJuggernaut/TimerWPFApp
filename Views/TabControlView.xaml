@@ -21,7 +21,7 @@
             </DockPanel>
         </DataTemplate>
         <DataTemplate x:Key="itemContentTemplate">
-            <views:TabItemView DataContext="{Binding DateTabViewModel}"/>
+            <views:TabItemView DataContext="{Binding TabItemViewModel}"/>
         </DataTemplate>
         <DataTemplate x:Key="itemHeaderTemplate">
             <TextBlock>
