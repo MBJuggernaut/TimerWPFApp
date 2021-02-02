@@ -1,7 +1,6 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 
-namespace TimerWpfApp
+namespace TimerWpfApp.Views
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
@@ -10,10 +9,8 @@ namespace TimerWpfApp
     {
         public MainWindow()
         {
-            InitializeComponent();
+            InitializeComponent();            
         }
-
-
     }
 }
 

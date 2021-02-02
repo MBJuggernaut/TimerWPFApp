@@ -1,29 +1,26 @@
-﻿using System;
+﻿using Microsoft.Xaml.Behaviors.Core;
+using Prism.Mvvm;
+using System;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
-using System.ComponentModel;
-using System.Runtime.CompilerServices;
+using System.Windows.Input;
 using TimerWpfApp.Models;
 
 namespace TimerWpfApp.ViewModels
 {
-
-    public class TabControlViewModel : INotifyPropertyChanged
+    public class MainWindowViewModel : BindableBase
     {
         private int selectedTabIndex = 0;
         private readonly ObservableCollection<ITab> tabs;
         private readonly AddTabModel addTabUnit;
 
+        public ICommand AddTabCommand { get => new ActionCommand(() => AddTab()); }
         public int SelectedTabIndex
         {
             get { return selectedTabIndex; }
             set
             {
-                if (selectedTabIndex != value)
-                {
-                    selectedTabIndex = value;
-                    OnPropertyChanged("SelectedTabIndex");
-                }
+                SetProperty(ref selectedTabIndex, value);
             }
         }
         private bool TabsCanBeAdded
@@ -44,12 +41,9 @@ namespace TimerWpfApp.ViewModels
         }
         public ObservableCollection<ITab> Tabs { get; }
 
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        public TabControlViewModel()
+        public MainWindowViewModel()
         {
             addTabUnit = new AddTabModel();
-            addTabUnit.AddRequested += OnTabAddRequested;
 
             tabs = new ObservableCollection<ITab>();
             tabs.CollectionChanged += Tabs_CollectionChanged;
@@ -58,12 +52,12 @@ namespace TimerWpfApp.ViewModels
             Tabs.Add(new TimerTabModel());
             Tabs.Add(addTabUnit);
         }
-        private void OnTabAddRequested(object sender, EventArgs e)
+        private void AddTab()
         {
-            if (TabsCanBeAdded)
+            if (SelectedTabIndex == Tabs.Count - 1 && TabsCanBeAdded)
             {
                 Tabs.Insert(Tabs.Count - 1, new TimerTabModel());
-                selectedTabIndex = Tabs.Count - 2;
+                SelectedTabIndex = Tabs.Count - 2;
 
                 if (!TabsCanBeAdded)
                 {
@@ -92,15 +86,16 @@ namespace TimerWpfApp.ViewModels
             if (TabsCanBeDeleted)
             {
                 Tabs.Remove((ITab)sender);
+
+
                 if (!Tabs.Contains(addTabUnit) && TabsCanBeAdded)
                 {
                     Tabs.Add(addTabUnit);
                 }
+
+                if (SelectedTabIndex == Tabs.Count - 1)
+                    SelectedTabIndex--;
             }
-        }        
-        private void OnPropertyChanged([CallerMemberName] string propertyName = "")
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

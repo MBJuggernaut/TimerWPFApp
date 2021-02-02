@@ -1,24 +1,35 @@
 ﻿using Microsoft.Xaml.Behaviors.Core;
 using System;
+using System.ComponentModel;
+using System.Runtime.CompilerServices;
 using System.Windows.Input;
 
 namespace TimerWpfApp.Models
 {
-    public abstract class Tab : ITab
+    public abstract class Tab : ITab, INotifyPropertyChanged
     {
+        private string name;
+        public event PropertyChangedEventHandler PropertyChanged;
+        public ICommand CloseCommand { get; }
+        public event EventHandler CloseRequested = delegate { };
+        public string Name
+        {
+            get => name;
+            set
+            {
+                name = value;
+                OnPropertyChanged();
+            }
+        }
+
         public Tab()
         {
             CloseCommand = new ActionCommand(() => CloseRequested.Invoke(this, EventArgs.Empty));
         }
-        private string name;
-        public string Name
+
+        private void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
-            get { return name; }
-            set { name = value;}
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public ICommand CloseCommand { get; }
-        public event EventHandler CloseRequested = delegate { };
-
-
     }
 }

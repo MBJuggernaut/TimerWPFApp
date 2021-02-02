@@ -7,77 +7,42 @@ using TimerWpfApp.Models;
 
 namespace TimerWpfApp.ViewModels
 {
-    public class TabItemViewModel : INotifyPropertyChanged
+    public class TabItemViewModel : ITabItemViewModel, INotifyPropertyChanged
     {
-        private bool isStartTimer = false;
-        private string pauseButtonHeader;
-        private bool isPauseButtonPressed;
-        private TimeSpan time;
-        private ICommand pause;
         private readonly TimerSpanModel timer;
-
         public bool IsVisibleStart
         {
-            get
-            {
-                return !isStartTimer;
-            }
-            set
-            {
-                isStartTimer = !value;
-                OnPropertyChanged("IsVisibleStart");
-            }
+            get => !timer.IsTimerOn;
+
         }
         public bool IsVisiblePauseAndReset
         {
-            get
-            {
-                return isStartTimer;
-            }
-            set
-            {
-                isStartTimer = value;
-                OnPropertyChanged("IsVisiblePauseAndReset");
-            }
+            get => timer.IsTimerOn;
         }
-
         public bool IsPauseButtonPressed
         {
-            get => isPauseButtonPressed;
-            set
-            {
-                isPauseButtonPressed = value;
-                OnPropertyChanged();
-            }
-        } // перенести в события?
+            get => !timer.IsTimerTicking;
+        }
         public string PauseButtonHeader
         {
-            get => pauseButtonHeader;
-            set
+            get
             {
-                pauseButtonHeader = value;
-                OnPropertyChanged();
+                if (IsPauseButtonPressed) return "Continue";
+                return "Pause";
             }
         }
         public TimeSpan Time
         {
-            get => time;
-            set
-            {
-                time = value;
-                OnPropertyChanged();
-            }
+            get => timer.Timespan;
         }
-
-        public ICommand Start { get; }
-        public ICommand Reset { get; }        
+        public ICommand Start { get => new ActionCommand(() => timer.Start()); }
+        public ICommand Reset { get => new ActionCommand(() => timer.Reset()); }
         public ICommand Pause
         {
-            get => pause;
-            set
+            get
             {
-                pause = value;
-                OnPropertyChanged("Pause");
+                if (IsPauseButtonPressed) return new ActionCommand(() => timer.Start());
+                return new ActionCommand(() => timer.Stop());
             }
         }
         public event PropertyChangedEventHandler PropertyChanged;
@@ -85,43 +50,18 @@ namespace TimerWpfApp.ViewModels
         public TabItemViewModel()
         {
             timer = new TimerSpanModel();
-
-            Start = new ActionCommand(() => StartTimer());
-
-            Reset = new ActionCommand(() => ResetTimer());
-
-            timer.TimerClicked += UpdateFields;
+            timer.PropertyChanged += UpdateProperties;
         }
 
-        private void UpdateFields(object sender, EventArgs e)
+        private void UpdateProperties(object sender, EventArgs e)
         {
-            Time = timer.Timespan;
+            OnPropertyChanged("IsVisibleStart");
+            OnPropertyChanged("IsVisiblePauseAndReset");
+            OnPropertyChanged("PauseButtonHeader");
+            OnPropertyChanged("IsPauseButtonPressed");
+            OnPropertyChanged("Time");
+            OnPropertyChanged("Pause");
         }
-        private void StartTimer()
-        {
-            timer.Start();
-            PauseButtonHeader = "Pause";
-            Pause = new ActionCommand(() => PauseTimer());
-            IsVisibleStart = false;
-            IsVisiblePauseAndReset = true;
-            IsPauseButtonPressed = false;
-        }
-        private void PauseTimer()
-        {
-            timer.Stop();
-            PauseButtonHeader = "Continue";
-
-            Pause = new ActionCommand(() => StartTimer());
-            IsPauseButtonPressed = true;
-        }
-        private void ResetTimer()
-        {
-            timer.Reset();
-            Time = timer.Timespan;
-            IsVisibleStart = true;
-            IsVisiblePauseAndReset = false;
-        }
-
         private void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
