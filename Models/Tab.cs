@@ -9,6 +9,8 @@ namespace TimerWpfApp.Models
     public abstract class Tab : ITab, INotifyPropertyChanged
     {
         private string name;
+       // private bool canBeDeleted;
+
         public event PropertyChangedEventHandler PropertyChanged;
         public ICommand CloseCommand { get; }
         public event EventHandler CloseRequested = delegate { };
@@ -22,12 +24,17 @@ namespace TimerWpfApp.Models
             }
         }
 
+        public bool CanBeDeleted
+        {
+            get;set;
+        }
+
         public Tab()
         {
             CloseCommand = new ActionCommand(() => CloseRequested.Invoke(this, EventArgs.Empty));
         }
 
-        private void OnPropertyChanged([CallerMemberName] string propertyName = "")
+        protected void OnPropertyChanged([CallerMemberName] string propertyName = "")
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }

@@ -11,6 +11,7 @@ namespace TimerWpfApp.ViewModels
     public class MainWindowViewModel : BindableBase
     {
         private int selectedTabIndex = 0;
+        private int tabsCount = 1;
         private readonly ObservableCollection<ITab> tabs;
         private readonly AddTabModel addTabUnit;
 
@@ -49,15 +50,17 @@ namespace TimerWpfApp.ViewModels
             tabs.CollectionChanged += Tabs_CollectionChanged;
             Tabs = tabs;
 
-            Tabs.Add(new TimerTabModel());
+            
             Tabs.Add(addTabUnit);
+            AddTab();
         }
         private void AddTab()
         {
             if (SelectedTabIndex == Tabs.Count - 1 && TabsCanBeAdded)
             {
-                Tabs.Insert(Tabs.Count - 1, new TimerTabModel());
+                Tabs.Insert(Tabs.Count - 1, new TimerTabModel(tabsCount));
                 SelectedTabIndex = Tabs.Count - 2;
+                tabsCount++;
 
                 if (!TabsCanBeAdded)
                 {
@@ -83,10 +86,10 @@ namespace TimerWpfApp.ViewModels
         }
         private void OnTabCloseRequested(object sender, EventArgs e)
         {
-            if (TabsCanBeDeleted)
+            var thisTab = (TimerTabModel)sender;
+            if (TabsCanBeDeleted && thisTab.CanBeDeleted)
             {
                 Tabs.Remove((ITab)sender);
-
 
                 if (!Tabs.Contains(addTabUnit) && TabsCanBeAdded)
                 {

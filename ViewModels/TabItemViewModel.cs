@@ -7,7 +7,7 @@ using TimerWpfApp.Models;
 
 namespace TimerWpfApp.ViewModels
 {
-    public class TabItemViewModel : ITabItemViewModel, INotifyPropertyChanged
+    public class TabItemViewModel : INotifyPropertyChanged
     {
         private readonly TimerSpanModel timer;
         public bool IsVisibleStart
